@@ -55,7 +55,7 @@ def main():
     job1.job = "deployment of residential modules 1 and 2"
     job1.work_size = 15
     job1.collaborators = "2, 3"
-    job1.start_date = datetime.datetime(2026, 3, 15)
+    job1.start_date = datetime.datetime.now()
     job1.is_finished = False
 
     db_sess.add(captain)

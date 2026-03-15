@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>Works log</h3>
+    {% for action in actions %}
+        <h3>Action #{{id_work}}</h3>
+        <table border="1">
+            <tr>
+                <th>Title of activity</th>
+                <th>Team leader</th>
+                <th>Duration</th>
+                <th>List of collaborators</th>
+                <th>Is finished</th>
+            </tr>
+            <tr>
+                <td>{{ action[0] }}</td>
+                <td>{{ action[1] }}</td>
+                <td>{{ action[2] }}</td>
+                <td>{{ action[3] }}</td>
+                <td>{{ action[4] }}</td>
+            </tr>
+        </table>
+    {% endfor %}
+{% endblock %}

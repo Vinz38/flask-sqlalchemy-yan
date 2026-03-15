@@ -1,0 +1,31 @@
+h4 {
+    color: white;
+    padding-left: 0px;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+h3 {
+    text-align: center;
+}
+.container {
+    padding-left: 0px; 
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+td {
+    border: 1px solid black;
+    padding: 10px;
+    height: 40px;        
+    text-align: center; 
+    background-color: rgba(128,128,128,0.5);
+}
+
+th {
+    border: 1px solid black;
+    padding: 10px;
+    height: 40px;        
+    text-align: center; 
+    background-color: rgba(95,158,160,0.5);
+}
+
