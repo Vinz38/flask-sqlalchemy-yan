@@ -21,9 +21,7 @@ def auto_answer():
         is_finished = ""
         collaborators = ""
         id_work = None
-        duration = datetime.datetime.now() - user.modified_date
-        hours = duration.total_seconds() / 3600
-        hours = round(hours, 1)
+        duration = 0
         for job in jobs:
             if user.id == job.team_leader:
                 if job.is_finished == 0:
@@ -32,9 +30,10 @@ def auto_answer():
                     is_finished = "Is finished"
             id_work = job.id
             collaborators = job.collaborators
+            duration = job.work_size
             break
         action = [user.speciality,
-                  f"{user.surname} {user.name}", f"{hours} hours", collaborators, is_finished]
+                  f"{user.surname} {user.name}", f"{duration} hours", collaborators, is_finished]
         actions.append(action)
     return render_template('classwork-7.html', actions=actions, id_work=id_work)
 
