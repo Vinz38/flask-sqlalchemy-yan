@@ -6,11 +6,17 @@ from data.jobs import Jobs
 from flask_login import LoginManager
 from auth import auth_bp
 from register import reg_bp
+from delete import delete_bp
+from edit import edit_bp
+from add import add_bp
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.register_blueprint(auth_bp)
 app.register_blueprint(reg_bp)
+app.register_blueprint(edit_bp)
+app.register_blueprint(delete_bp)
+app.register_blueprint(add_bp)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -26,30 +32,24 @@ def load_user(user_id):
 @app.route('/main')
 @login_required
 def auto_answer():
-    db_session.global_init("db/mars_explorer.db")
     db_sess = db_session.create_session()
     users = db_sess.query(User).all()
     jobs = db_sess.query(Jobs).all()
     actions = []
-    id_work = None
-    for user in users:
-        is_finished = ""
-        collaborators = ""
-        duration = 0
-        for job in jobs:
+    for job in jobs:
+        name = ""
+        if_finished = ""
+        for user in users:
             if user.id == job.team_leader:
-                if job.is_finished == 0:
-                    is_finished = "Is not finished"
-                else:
-                    is_finished = "Is finished"
-            id_work = job.id
-            collaborators = job.collaborators
-            duration = job.work_size
-            break
-        action = [user.speciality,
-                  f"{user.surname} {user.name}", f"{duration} hours", collaborators, is_finished]
+                name = f"{user.surname} {user.name}"
+                break
+        if job.is_finished:
+            if_finished = "Is finished"
+        else:
+            if_finished = "Is not finished"
+        action = [job.job, name, job.work_size, job.collaborators, if_finished, job.id]
         actions.append(action)
-    return render_template('classwork-7.html', actions=actions, id_work=id_work)
+    return render_template('classwork-7.html', actions=actions)
 
 
 if __name__ == '__main__':
