@@ -9,8 +9,15 @@ from register import reg_bp
 from delete import delete_bp
 from edit import edit_bp
 from add import add_bp
+from flask_restful import reqparse, abort, Api, Resource
+from data import users_resource
+
 
 app = Flask(__name__)
+api = Api(app)
+api.add_resource(users_resource.JobsListResource, '/api/v2/jobs') 
+api.add_resource(users_resource.JobsResource, '/api/v2/news/<int:jobs_id>')
+
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 app.register_blueprint(auth_bp)
 app.register_blueprint(reg_bp)
