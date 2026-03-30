@@ -1,58 +1,62 @@
 from flask_restful import reqparse, abort, Api, Resource
 from . import db_session
-from .jobs import Jobs
+from .users import User
 from flask import jsonify
 
 
-def abort_if_jobs_not_found(jobs_id):
+def abort_if_user_not_found(user_id):
     session = db_session.create_session()
-    jobs = session.query(Jobs).get(jobs_id)
-    if not jobs:
-        abort(404, message=f"Jobs {jobs_id} not found")
+    user = session.query(User).get(user_id)
+    if not user:
+        abort(404, message=f"User {user_id} not found")
 
 
-class JobsResource(Resource):
-    def get(self, jobs_id):
-        abort_if_jobs_not_found(jobs_id)
+class UserResource(Resource):
+    def get(self, user_id):
+        abort_if_user_not_found(user_id)
         session = db_session.create_session()
-        jobs = session.get(Jobs, jobs_id)
-        return jsonify({'jobs': jobs.to_dict(
-            only=('team_leader', 'job', 'work_size', 'collaborators', 'is_finished'))})
+        user = session.get(User, user_id)
+        return jsonify({'user': user.to_dict(
+            only=('surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'hashed_password'))})
 
-    def delete(self, jobs_id):
-        abort_if_jobs_not_found(jobs_id)
+    def delete(self, user_id):
+        abort_if_user_not_found(user_id)
         session = db_session.create_session()
-        jobs = session.get(Jobs, jobs_id)
-        session.delete(jobs)
+        user = session.get(User, user_id)
+        session.delete(user)
         session.commit()
         return jsonify({'success': 'OK'})
 
 
 parser = reqparse.RequestParser()
-parser.add_argument('team_leader', required=True, type=int)
-parser.add_argument('job', required=True)
-parser.add_argument('work_size', required=True, type=int)
-parser.add_argument('collaborators', required=True)
-parser.add_argument('is_finished', required=True, type=bool)
+parser.add_argument('surname', required=True)
+parser.add_argument('name', required=True)
+parser.add_argument('age', required=True, type=int)
+parser.add_argument('position', required=True)
+parser.add_argument('speciality', required=True)
+parser.add_argument('address', required=True)
+parser.add_argument('email', required=True)
+parser.add_argument('hashed_password', required=True)
 
 
-class JobsListResource(Resource):
+
+class UserListResource(Resource):
     def get(self):
         session = db_session.create_session()
-        jobs = session.query(Jobs).all()
-        return jsonify({'jobs': [item.to_dict(
-            only=('team_leader', 'job', 'work_size', 'collaborators', 'is_finished')) for item in jobs]})
+        user = session.query(User).all()
+        return jsonify({'user': [item.to_dict(
+            only=('surname', 'name', 'age', 'position', 'speciality', 'address', 'email', 'hashed_password')) for item in user]})
 
     def post(self):
         args = parser.parse_args()
         session = db_session.create_session()
-        jobs = Jobs(
+        user = User(
             team_leader=args['team_leader'],
             job=args['job'],
             work_size=args['work_size'],
             collaborators=args['collaborators'],
             is_finished=args['is_finished']
         )
-        session.add(jobs)
+        session.add(user)
         session.commit()
-        return jsonify({'id': jobs.id})
+        return jsonify({'id': user.id})
